@@ -9,14 +9,14 @@ import com.example.ics342assign1.databinding.FragmentForecastBinding
 import kotlin.io.path.createTempDirectory
 import kotlin.math.min
 
-class ForecastFragment : Fragment(R.layout.fragment_forecast) {
+//class ForecastFragment : Fragment(R.layout.fragment_forecast) {
 
-    private lateinit var binding : FragmentForecastBinding
+   // private lateinit var binding : FragmentForecastBinding
     /*private val args: ForecastFragmentArgs by navArgs()*/
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding = FragmentForecastBinding.bind(view)
+  //  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+ //       super.onViewCreated(view, savedInstanceState)
+  //      binding = FragmentForecastBinding.bind(view)
         /*binding.forecastTemp.text = args.forecast.temp*/
 
         /*input forecast data in a list here*/
@@ -39,12 +39,12 @@ class ForecastFragment : Fragment(R.layout.fragment_forecast) {
             DayForecast(),
         )*/
 
-        binding.currentConditionButton.setOnClickListener {
-            findNavController().navigate(R.id.action_forecastFragment_to_currentConditionsFragment)
-        }
+  //      binding.currentConditionButton.setOnClickListener {
+ //           findNavController().navigate(R.id.action_forecastFragment_to_currentConditionsFragment)
+  //      }
 
-    }
+  //  }
 
 
 
-}
+//}
