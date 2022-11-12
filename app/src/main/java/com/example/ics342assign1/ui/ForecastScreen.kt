@@ -45,7 +45,6 @@ val forecastData = (0 until 16).map {
 fun ForecastScreen() {
     LazyColumn {
         items(items = forecastData) { item: DayForecast ->
-
         }
     }
 }
