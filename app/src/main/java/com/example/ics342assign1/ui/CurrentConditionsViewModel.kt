@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
-
 @HiltViewModel
 class CurrentConditionsViewModel @Inject constructor(private val api: OpenWeatherMapApi): ViewModel() {
     private val _currentConditions = Channel<CurrentConditions>()
