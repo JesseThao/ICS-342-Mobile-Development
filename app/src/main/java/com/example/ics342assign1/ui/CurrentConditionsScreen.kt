@@ -1,5 +1,6 @@
 package com.example.ics342assign1.ui
 
+import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -10,9 +11,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Button
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -20,11 +26,40 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.LifecycleOwner
+import coil.compose.AsyncImage
 import com.example.ics342assign1.R
 import com.example.ics342assign1.R.string
+import com.example.ics342assign1.models.CurrentConditions
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun CurrentConditions(
+    viewModel: CurrentConditionsViewModel = hiltViewModel(),
+    lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
+    onForecastButtonClick: () -> Unit,
+) {
+    val state by viewModel.currentConditions.collectAsState(null)
+
+    LaunchedEffect(Unit) {
+        viewModel.fetchData()
+    }
+
+    Scaffold(
+        topBar = { AppBar(title = stringResource(id = R.string.app_name)) },
+    ) {
+        state?.let {
+            CurrentConditionsContent(it) {
+                onForecastButtonClick()
+            }
+        }
+    }
+}
+
+@Composable
+private fun CurrentConditionsContent (
+    currentConditions: CurrentConditions,
     onForecastButtonClick: () -> Unit,
 ) {
     Column (
@@ -45,23 +80,24 @@ fun CurrentConditions(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = stringResource(id = R.string.current_temp),
+                    text = stringResource(id = R.string.temperature, currentConditions.conditions.temperature),
                     style = TextStyle(
                         fontWeight = FontWeight(400),
                         fontSize = 72.sp,
                     )
                 )
                 Text(
-                    text = stringResource(id = R.string.feels_like_temp, 110),
+                    text = stringResource(id = string.feels_like_temp, currentConditions.conditions.feelsLike.toInt()),
                     style = TextStyle(
                         fontSize = 12.sp,
                     )
                 )
             }
             Spacer(modifier = Modifier.weight(1f, fill = true))
-            Image(
+            val iconUrl = String.format("https://openweathermap.org/img/wn/10d@2x.png", currentConditions.weatherData.firstOrNull()?.iconName)
+            AsyncImage(
+                model = iconUrl,
                 modifier = Modifier.size(72.dp),
-                painter = painterResource(R.drawable.sun_icon),
                 contentDescription = "Sunny"
             )
 
@@ -75,10 +111,10 @@ fun CurrentConditions(
             val textStyle = TextStyle(
                 fontSize = 16.sp,
             )
-            Text(text = stringResource(id = R.string.low_temp, 98), style = textStyle)
-            Text(text = stringResource(id = R.string.high_temp, 110), style = textStyle)
-            Text(text = stringResource(id = R.string.humidity, 78), style = textStyle)
-            Text(text = stringResource(id = R.string.pressure, 1023), style = textStyle)
+            Text(text = stringResource(id = R.string.low_temp, currentConditions.conditions.minTemperature.toInt()), style = textStyle)
+            Text(text = stringResource(id = R.string.high_temp, currentConditions.conditions.maxTemperature.toInt()), style = textStyle)
+            Text(text = stringResource(id = R.string.humidity, currentConditions.conditions.humidity.toInt()), style = textStyle)
+            Text(text = stringResource(id = R.string.pressure, currentConditions.conditions.pressure.toInt()), style = textStyle)
         }
         Spacer(modifier = Modifier.height(72.dp))
         Button(onClick = onForecastButtonClick) {
