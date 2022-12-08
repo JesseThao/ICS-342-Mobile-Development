@@ -46,6 +46,12 @@ android {
         //1.2.0-beta03	1.6.21
         kotlinCompilerExtensionVersion '1.2.0-rc02'
     }
+
+    allprojects {
+        tasks.withType(JavaCompile) {
+            options.compilerArgs << "-Xlint:deprecation"
+        }
+    }
 }
 
 dependencies {
@@ -67,9 +73,6 @@ dependencies {
     // LiveData
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
 
-    //hilt
-    implementation "com.google.dagger:hilt-android:2.44"
-    kapt "com.google.dagger:hilt-compiler:2.44"
 
     //Jetpack Compose
     implementation 'androidx.compose.ui:ui:1.2.1'
@@ -144,5 +147,7 @@ dependencies {
     implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
     implementation "com.google.dagger:hilt-android:2.44"
     kapt "com.google.dagger:hilt-compiler:2.44"
+
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
 
 }

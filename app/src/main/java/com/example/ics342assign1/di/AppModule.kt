@@ -19,7 +19,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 class AppModule {
 
     @Provides
-    fun provideMoshi(): Moshi {
+    fun providesMoshi(): Moshi {
         return Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
             .build()
@@ -32,9 +32,9 @@ class AppModule {
         val client: OkHttpClient = OkHttpClient.Builder()
             .addInterceptor(logging)
             .build()
-        return Builder()
+        return Retrofit.Builder()
             .client(client)
-            .baseUrl("https://api.openweatherapp.org/")
+            .baseUrl("https://api.openweathermap.org/")
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
     }
