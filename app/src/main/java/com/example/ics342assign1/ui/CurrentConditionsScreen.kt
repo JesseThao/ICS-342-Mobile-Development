@@ -32,27 +32,34 @@ import coil.compose.AsyncImage
 import com.example.ics342assign1.R
 import com.example.ics342assign1.R.string
 import com.example.ics342assign1.models.CurrentConditions
+import com.example.ics342assign1.models.LatitudeLongitude
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun CurrentConditions(
+    latitudeLongitude: LatitudeLongitude?,
     viewModel: CurrentConditionsViewModel = hiltViewModel(),
+    onGetWeatherForMyLocationClick: () -> Unit,
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
     onForecastButtonClick: () -> Unit,
 ) {
     val state by viewModel.currentConditions.collectAsState(null)
 
-    LaunchedEffect(Unit) {
-        viewModel.fetchData()
+    if (latitudeLongitude != null) {
+        LaunchedEffect(Unit) {
+                viewModel.fetchCurrentLocationData(latitudeLongitude)
+            }
+        } else {
+        LaunchedEffect(Unit) {
+            viewModel.fetchData()
+        }
     }
 
     Scaffold(
         topBar = { AppBar(title = stringResource(id = R.string.app_name)) },
     ) {
         state?.let {
-            CurrentConditionsContent(it) {
-                onForecastButtonClick()
-            }
+            CurrentConditionsContent(it, onGetWeatherForMyLocationClick, onForecastButtonClick)
         }
     }
 }
@@ -60,6 +67,7 @@ fun CurrentConditions(
 @Composable
 private fun CurrentConditionsContent (
     currentConditions: CurrentConditions,
+    onGetWeatherForMyLocationClick: () -> Unit,
     onForecastButtonClick: () -> Unit,
 ) {
     Column (
@@ -67,7 +75,7 @@ private fun CurrentConditionsContent (
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            text = stringResource(id = R.string.city_name),
+            text = currentConditions.cityName,
             style = TextStyle(
                 fontWeight = FontWeight(600),
                 fontSize = 24.sp
@@ -120,6 +128,10 @@ private fun CurrentConditionsContent (
         Button(onClick = onForecastButtonClick) {
             Text(text = stringResource(id = R.string.forecast))
         }
+        Spacer(modifier = Modifier.height(24.dp))
+        Button(onClick = onGetWeatherForMyLocationClick) {
+            Text(text = stringResource(id = string.get_weather_for_my_location))
+        }
     }
 }
 
@@ -129,5 +141,4 @@ private fun CurrentConditionsContent (
 )
 @Composable
 fun CurrentConditionsPreview() {
-    CurrentConditions {}
 }

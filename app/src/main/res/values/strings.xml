@@ -8,6 +8,7 @@
     <string name="low_temp">Low: %d°</string>
     <string name="sunrise">Sunrise: %d</string>
     <string name="sunset">Sunset: %d</string>
-    <string name="forecast">Forecast: %d</string>
+    <string name="forecast">Forecast </string>
     <string name="temperature">%s°</string>
+    <string name="get_weather_for_my_location">Get Weather for My Location</string>
 </resources>
